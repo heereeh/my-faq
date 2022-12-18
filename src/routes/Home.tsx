@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Conversation, User } from "types";
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import FaqFactory from "components/FaqFactory";
-import { dbService } from "fbase";
+import { authService, dbService } from "fbase";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@chakra-ui/react";
 
 const Home = ({user}: {user: User}) => {
   const [convs, setConvs] = useState<Conversation[]>([])
@@ -18,6 +20,12 @@ const Home = ({user}: {user: User}) => {
     getConvs()
   }, [])
 
+  const navigate = useNavigate()
+  const onLogOutClick = () => {
+    authService.signOut()
+    navigate("/")
+  }
+
   return (
     <div className="App">
       <header>
@@ -29,9 +37,10 @@ const Home = ({user}: {user: User}) => {
           { convs.map(c => <div key={c.id}>{c.text}</div>) }
         </article>
       </section>
-      <FaqFactory />
+      <FaqFactory user={user} />
       <footer>
         <p>ⓒ 2022 My FAQ</p>
+        <Button size="sm" onClick={onLogOutClick}>Log Out</Button>
       </footer>
     </div>
   )

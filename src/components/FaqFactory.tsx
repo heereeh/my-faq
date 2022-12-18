@@ -1,8 +1,9 @@
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { User } from 'types';
 import { dbService } from '../fbase';
 
-function FaqFactory() {
+function FaqFactory({ user }: {user: User}) {
   const [question, setQuestion] = useState("")
 
   const onSubmit: React.ComponentProps<"form">["onSubmit"] = async (event) => {
@@ -10,7 +11,7 @@ function FaqFactory() {
     if (!question) return
     const newConv = {
       text: question,
-      userId: "",
+      userId: user.uid,
       createdAt: serverTimestamp()
     }
 

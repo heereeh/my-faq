@@ -17,6 +17,5 @@ export interface User {
 
 export interface AppRouterOption {
   refreshUser: () => void
-  isLoggedIn: boolean
-  user: User
+  user: User | null
 }

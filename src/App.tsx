@@ -36,7 +36,7 @@ function App() {
   return (
     <>
     {
-      init && user? <AppRouter refreshUser={refreshUser} isLoggedIn={user != null} user={user} />
+      init? <AppRouter refreshUser={refreshUser} user={user} />
       : "Initializing..."
     }
     </>

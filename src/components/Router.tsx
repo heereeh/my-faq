@@ -4,10 +4,10 @@ import Home from "routes/Home";
 import Auth from "routes/Login";
 import { AppRouterOption } from "../types";
 
-export default function AppRouter({refreshUser, user, isLoggedIn}: AppRouterOption) {
+export default function AppRouter({refreshUser, user}: AppRouterOption) {
   return <Router>
     <Routes>
-      { isLoggedIn? (
+      { user? (
         <>
         <Route path="/" element={<Home user={user} />} />
         </>
