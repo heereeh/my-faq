@@ -1,42 +1,46 @@
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+
+import AppRouter from 'components/Router';
+import { authService } from 'fbase';
 import React, { useState, useEffect } from 'react';
+import { User } from 'types';
 import './App.css';
-import FaqFactory from './components/FaqFactory';
-import { dbService } from './fbase';
-import { Conversation } from './types';
 
 function App() {
-  const [convs, setConvs] = useState<Conversation[]>([])
-
-  const getConvs = async() => {
-    const q = query(collection(dbService, "faqs"), orderBy("createdAt", "desc"))
-    onSnapshot(q, (snapshot) => {
-      setConvs(snapshot.docs.map(doc => ({ ...(doc.data() as Conversation), id: doc.id })))
-    })
-  }
+  const [init, setInit] = useState(false)
+  const [user, setUser] = useState<User|null>(null)
 
   useEffect(() => {
-    getConvs()
+    authService.onAuthStateChanged((user) => {
+      if (user) {
+        setUser({
+          displayName: user.displayName,
+          uid: user.uid
+        })
+      } else {
+        setUser(null)
+      }
+      setInit(true)
+    })
   }, [])
-  
+
+  const refreshUser = () => {
+    const user = authService.currentUser
+    if (user) {
+      setUser({
+        displayName: user.displayName,
+        uid: user.uid
+      })
+    }
+  }
 
   return (
-    <div className="App">
-      <header>
-        <h1>My FAQ</h1>
-      </header>
-      <section>
-        <header></header>
-        <article>
-          { convs.map(c => <div key={c.id}>{c.text}</div>) }
-        </article>
-      </section>
-      <FaqFactory />
-      <footer>
-        <p>ⓒ 2022 My FAQ</p>
-      </footer>
-    </div>
-  );
+    <>
+    {
+      init && user? <AppRouter refreshUser={refreshUser} isLoggedIn={user != null} user={user} />
+      : "Initializing..."
+    }
+    </>
+  )
 }
 
 export default App;
