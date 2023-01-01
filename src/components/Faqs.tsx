@@ -27,7 +27,7 @@ const Faqs = ({user}: {user: User}) => {
           size="sm"
           bgColor={c.userId === user.uid? "yellow.100":"gray.100"}
           w="fit-content"
-          alignSelf={c.userId === user.uid? "start":"end"}
+          alignSelf={c.userId === user.uid? "end":"start"}
           >
           <CardBody>
             <Box
