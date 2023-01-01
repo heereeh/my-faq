@@ -1,5 +1,7 @@
+import { Box, Button, Textarea } from '@chakra-ui/react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { postMessage } from 'slack';
 import { User } from 'types';
 import { dbService } from '../fbase';
 
@@ -15,7 +17,10 @@ function FaqFactory({ user }: {user: User}) {
       createdAt: serverTimestamp()
     }
 
-    await addDoc(collection(dbService, "faqs"), newConv)
+    await Promise.all([
+      addDoc(collection(dbService, "faqs"), newConv),
+      postMessage(user, question)
+    ])
 
     setQuestion("")
   }
@@ -26,15 +31,21 @@ function FaqFactory({ user }: {user: User}) {
   }
 
   return (
-    <section>
-      <header></header>
-      <article>
-        <form onSubmit={onSubmit}>
-          <textarea value={question} onChange={onChange} placeholder="질문을 남겨주세요..."  />
-          <button type="submit">Submit</button>
-        </form>
-      </article>
-    </section>
+    <Box mt="2">
+      <form onSubmit={onSubmit}>
+        <Textarea
+          size="xs"
+          value={question}
+          onChange={onChange}
+          placeholder="질문을 남겨주세요..."  />
+        <Button
+          colorScheme="blue"
+          variant="solid"
+          mt="1"
+          w="100%"
+          type="submit">Submit</Button>
+      </form>
+    </Box>
   )
 }
 

@@ -1,4 +1,5 @@
 
+import { Container } from '@chakra-ui/react';
 import AppRouter from 'components/Router';
 import { authService } from 'fbase';
 import React, { useState, useEffect } from 'react';
@@ -34,12 +35,12 @@ function App() {
   }
 
   return (
-    <>
-    {
-      init? <AppRouter refreshUser={refreshUser} user={user} />
-      : "Initializing..."
-    }
-    </>
+    <Container>
+      {
+        init? <AppRouter refreshUser={refreshUser} user={user} />
+        : "Initializing..."
+      }
+    </Container>
   )
 }
 
